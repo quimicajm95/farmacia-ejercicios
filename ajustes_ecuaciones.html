@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajuste de Ecuaciones - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .question-block {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .equation {
+            font-family: 'Courier New', monospace;
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+
+        .method-hint {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            font-style: italic;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-balance-scale"></i> Ajuste de Ecuaciones Químicas</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">Tanteo</span> <span class="info-badge">Oxidación-Reducción</span> <span class="info-badge">Balanceo</span> <span class="info-badge">Estequiometría</span></p>
+        </header>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Ajuste de Ecuaciones</h2>
+            <p>Practica el balanceo de ecuaciones químicas usando diferentes métodos</p>
+        </section>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">1</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">H₂ + O₂ → H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('1', '2H2 + O2 → 2H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">2</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Fe + O₂ → Fe₂O₃</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('2', '4Fe + 3O2 → 2Fe2O3')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">3</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">KMnO₄ + HCl → KCl + MnCl₂ + Cl₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('3', '2KMnO4 + 16HCl → 2KCl + 2MnCl2 + 5Cl2 + 8H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">4</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">CH₄ + O₂ → CO₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('4', 'CH4 + 2O2 → CO2 + 2H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">5</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Al + HCl → AlCl₃ + H₂</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('5', '2Al + 6HCl → 2AlCl3 + 3H2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">6</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Cu + HNO₃ → Cu(NO₃)₂ + NO + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('6', '3Cu + 8HNO3 → 3Cu(NO3)2 + 2NO + 4H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">7</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Na + H₂O → NaOH + H₂</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('7', '2Na + 2H2O → 2NaOH + H2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 8 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">8</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">K₂Cr₂O₇ + HCl → KCl + CrCl₃ + Cl₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('8', 'K2Cr2O7 + 14HCl → 2KCl + 2CrCl3 + 3Cl2 + 7H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 9 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">9</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">NH₃ + O₂ → NO + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('9', '4NH3 + 5O2 → 4NO + 6H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 10 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">10</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Ca(OH)₂ + H₃PO₄ → Ca₃(PO₄)₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('10', '3Ca(OH)2 + 2H3PO4 → Ca3(PO4)2 + 6H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 11 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">11</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Zn + HCl → ZnCl₂ + H₂</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer11" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('11', 'Zn + 2HCl → ZnCl2 + H2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback11" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 12 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">12</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">MnO₂ + HCl → MnCl₂ + Cl₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer12" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('12', 'MnO2 + 4HCl → MnCl2 + Cl2 + 2H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback12" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 13 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">13</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">C₂H₆ + O₂ → CO₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer13" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('13', '2C2H6 + 7O2 → 4CO2 + 6H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback13" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 14 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">14</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">FeS₂ + O₂ → Fe₂O₃ + SO₂</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer14" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('14', '4FeS2 + 11O2 → 2Fe2O3 + 8SO2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback14" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 15 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">15</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">H₂SO₄ + HI → H₂S + I₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer15" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('15', 'H2SO4 + 8HI → H2S + 4I2 + 4H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback15" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 16 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">16</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Al₂(SO₄)₃ + Ca(OH)₂ → Al(OH)₃ + CaSO₄</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer16" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('16', 'Al2(SO4)3 + 3Ca(OH)2 → 2Al(OH)3 + 3CaSO4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback16" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 17 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">17</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Cu + H₂SO₄ → CuSO₄ + SO₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer17" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('17', 'Cu + 2H2SO4 → CuSO4 + SO2 + 2H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback17" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 18 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">18</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Na₂CO₃ + HCl → NaCl + CO₂ + H₂O</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer18" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('18', 'Na2CO3 + 2HCl → 2NaCl + CO2 + H2O')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback18" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 19 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">19</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">KClO₃ → KCl + O₂</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer19" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('19', '2KClO3 → 2KCl + 3O2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback19" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 20 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">20</span> Ajuste de Ecuación</h2>
+            <div class="exercise-content">
+                <p>Ajusta la siguiente ecuación química:</p>
+                
+                <div class="question-block">
+                    <div class="equation">Fe₂O₃ + CO → Fe + CO₂</div>
+                    <p class="method-hint">💡 Puedes usar el método que prefieras</p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer20" class="answer-input" placeholder="Escribe la ecuación balanceada">
+                    <button class="btn-check" onclick="checkAnswer('20', 'Fe2O3 + 3CO → 2Fe + 3CO2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback20" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Ajuste de Ecuaciones Químicas | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function normalizeEquation(equation) {
+            return equation
+                .toLowerCase()
+                .replace(/→/g, '->')
+                .replace(/₀/g, '0')
+                .replace(/₁/g, '1')
+                .replace(/₂/g, '2')
+                .replace(/₃/g, '3')
+                .replace(/₄/g, '4')
+                .replace(/₅/g, '5')
+                .replace(/₆/g, '6')
+                .replace(/₇/g, '7')
+                .replace(/₈/g, '8')
+                .replace(/₉/g, '9')
+                .replace(/\s+/g, '')
+                .trim();
+        }
+
+        function checkAnswer(questionId, correctAnswer) {
+            const userAnswer = document.getElementById(`answer${questionId}`).value;
+            const feedback = document.getElementById(`feedback${questionId}`);
+            
+            feedback.style.display = 'block';
+            
+            const normalizedUserAnswer = normalizeEquation(userAnswer);
+            const normalizedCorrectAnswer = normalizeEquation(correctAnswer);
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! Ecuación balanceada correctamente.';
+                document.getElementById(`answer${questionId}`).style.borderColor = '#27ae60';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                document.getElementById(`answer${questionId}`).style.borderColor = '#e74c3c';
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const totalQuestions = 20;
+            
+            // Verificar todas las respuestas
+            const answers = [
+                { id: '1', correct: '2H2 + O2 → 2H2O' },
+                { id: '2', correct: '4Fe + 3O2 → 2Fe2O3' },
+                { id: '3', correct: '2KMnO4 + 16HCl → 2KCl + 2MnCl2 + 5Cl2 + 8H2O' },
+                { id: '4', correct: 'CH4 + 2O2 → CO2 + 2H2O' },
+                { id: '5', correct: '2Al + 6HCl → 2AlCl3 + 3H2' },
+                { id: '6', correct: '3Cu + 8HNO3 → 3Cu(NO3)2 + 2NO + 4H2O' },
+                { id: '7', correct: '2Na + 2H2O → 2NaOH + H2' },
+                { id: '8', correct: 'K2Cr2O7 + 14HCl → 2KCl + 2CrCl3 + 3Cl2 + 7H2O' },
+                { id: '9', correct: '4NH3 + 5O2 → 4NO + 6H2O' },
+                { id: '10', correct: '3Ca(OH)2 + 2H3PO4 → Ca3(PO4)2 + 6H2O' },
+                { id: '11', correct: 'Zn + 2HCl → ZnCl2 + H2' },
+                { id: '12', correct: 'MnO2 + 4HCl → MnCl2 + Cl2 + 2H2O' },
+                { id: '13', correct: '2C2H6 + 7O2 → 4CO2 + 6H2O' },
+                { id: '14', correct: '4FeS2 + 11O2 → 2Fe2O3 + 8SO2' },
+                { id: '15', correct: 'H2SO4 + 8HI → H2S + 4I2 + 4H2O' },
+                { id: '16', correct: 'Al2(SO4)3 + 3Ca(OH)2 → 2Al(OH)3 + 3CaSO4' },
+                { id: '17', correct: 'Cu + 2H2SO4 → CuSO4 + SO2 + 2H2O' },
+                { id: '18', correct: 'Na2CO3 + 2HCl → 2NaCl + CO2 + H2O' },
+                { id: '19', correct: '2KClO3 → 2KCl + 3O2' },
+                { id: '20', correct: 'Fe2O3 + 3CO → 2Fe + 3CO2' }
+            ];
+            
+            answers.forEach(answer => {
+                const userAnswer = document.getElementById(`answer${answer.id}`).value;
+                const normalizedUserAnswer = normalizeEquation(userAnswer);
+                const normalizedCorrectAnswer = normalizeEquation(answer.correct);
+                
+                if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente trabajo! Dominas el ajuste de ecuaciones químicas.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los métodos de balanceo.';
+            } else {
+                message = 'Revisa los conceptos fundamentales y practica más.';
+            }
+            
+            alert(`Resultados:\n${score}/${totalQuestions} respuestas correctas (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#34495e';
+                    const feedback = document.getElementById(`feedback${this.id.replace('answer', '')}`);
+                    feedback.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

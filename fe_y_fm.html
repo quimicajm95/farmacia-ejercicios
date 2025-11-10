@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmulas Empíricas y Moleculares - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-solve {
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-solve:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .result-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .theory-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .theory-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            height: 10px;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-calculator"></i> Fórmulas Empíricas y Moleculares</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">Composición Porcentual</span> <span class="info-badge">Fórmula Empírica</span> <span class="info-badge">Fórmula Molecular</span> <span class="info-badge">Masa Molar</span></p>
+        </header>
+
+        <!-- Sección de Teoría -->
+        <section class="theory-section">
+            <h2 class="theory-title"><i class="fas fa-book"></i> Método de Cálculo</h2>
+            <div class="exercise-content">
+                <p><strong>Pasos para determinar fórmulas empíricas y moleculares:</strong></p>
+                <ol>
+                    <li>Convertir porcentajes a gramos (suponiendo 100g de muestra)</li>
+                    <li>Convertir gramos a moles usando las masas atómicas</li>
+                    <li>Dividir cada cantidad de moles por el menor valor obtenido</li>
+                    <li>Multiplicar por números enteros si es necesario para obtener números enteros</li>
+                    <li>Para la fórmula molecular: Fórmula molecular = (Fórmula empírica) × n</li>
+                    <li>Donde n = Masa molecular experimental / Masa de la fórmula empírica</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Fórmulas</h2>
+            <p>Calcula las fórmulas empíricas y moleculares de los siguientes compuestos</p>
+        </section>
+
+        <div class="exercise-grid">
+            <!-- Ejercicio 1 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">1</span> Compuesto Orgánico Simple</h2>
+                <div class="exercise-content">
+                    <p>Un compuesto contiene carbono, hidrógeno y oxígeno. Su composición es:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>40.00%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>6.67%</td><td>1.008</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>53.33%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 180 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex1_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex1_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(1)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(1)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex1_feedback"></div>
+                    <div class="result-section" id="ex1_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 2 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">2</span> Hidrocarburo</h2>
+                <div class="exercise-content">
+                    <p>Un hidrocarburo tiene la siguiente composición:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>85.63%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>14.37%</td><td>1.008</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 56 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex2_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex2_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(2)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(2)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex2_feedback"></div>
+                    <div class="result-section" id="ex2_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 3 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">3</span> Compuesto Nitrogenado</h2>
+                <div class="exercise-content">
+                    <p>Un compuesto orgánico contiene C, H, O y N:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>32.00%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>6.67%</td><td>1.008</td></tr>
+                            <tr><td>Nitrogeno (N)</td><td>18.67%</td><td>14.01</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>42.66%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 150 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex3_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex3_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(3)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(3)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex3_feedback"></div>
+                    <div class="result-section" id="ex3_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 4 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">4</span> Compuesto Aromático</h2>
+                <div class="exercise-content">
+                    <p>Un compuesto aromático tiene la composición:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>92.26%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>7.74%</td><td>1.008</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 78 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex4_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex4_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(4)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(4)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex4_feedback"></div>
+                    <div class="result-section" id="ex4_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 5 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">5</span> Alcohol Simple</h2>
+                <div class="exercise-content">
+                    <p>Un alcohol tiene la siguiente composición:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>52.14%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>13.13%</td><td>1.008</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>34.73%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 46 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex5_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex5_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(5)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(5)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex5_feedback"></div>
+                    <div class="result-section" id="ex5_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 6 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">6</span> Compuesto Oxigenado</h2>
+                <div class="exercise-content">
+                    <p>Un compuesto contiene:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>60.00%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>13.33%</td><td>1.008</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>26.67%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 60 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex6_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex6_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(6)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(6)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex6_feedback"></div>
+                    <div class="result-section" id="ex6_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 7 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">7</span> Éter Simple</h2>
+                <div class="exercise-content">
+                    <p>Un éter tiene la composición:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>64.86%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>13.51%</td><td>1.008</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>21.63%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 74 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex7_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex7_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(7)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(7)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex7_feedback"></div>
+                    <div class="result-section" id="ex7_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 8 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">8</span> Alcano Lineal</h2>
+                <div class="exercise-content">
+                    <p>Un alcano tiene la composición:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>83.24%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>16.76%</td><td>1.008</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 72 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex8_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex8_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(8)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(8)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex8_feedback"></div>
+                    <div class="result-section" id="ex8_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 9 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">9</span> Fenol</h2>
+                <div class="exercise-content">
+                    <p>Un compuesto fenólico tiene la composición:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>76.60%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>6.38%</td><td>1.008</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>17.02%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 94 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex9_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex9_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(9)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(9)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex9_feedback"></div>
+                    <div class="result-section" id="ex9_result"></div>
+                </div>
+            </div>
+
+            <!-- Ejercicio 10 -->
+            <div class="exercise-card">
+                <h2 class="exercise-title"><span class="exercise-number">10</span> Compuesto Aromático Oxigenado</h2>
+                <div class="exercise-content">
+                    <p>Un compuesto aromático contiene:</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Elemento</th>
+                                <th>% en masa</th>
+                                <th>Masa atómica (g/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Carbono (C)</td><td>77.78%</td><td>12.01</td></tr>
+                            <tr><td>Hidrógeno (H)</td><td>7.41%</td><td>1.008</td></tr>
+                            <tr><td>Oxígeno (O)</td><td>14.81%</td><td>16.00</td></tr>
+                        </tbody>
+                    </table>
+                    <p><strong>Masa molecular experimental: 108 g/mol</strong></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Empírica:</label>
+                        <input type="text" id="ex10_empirical" class="answer-input" placeholder="Ingresa la fórmula empírica">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fórmula Molecular:</label>
+                        <input type="text" id="ex10_molecular" class="answer-input" placeholder="Ingresa la fórmula molecular">
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn-check" onclick="checkExercise(10)"><i class="fas fa-check"></i> Verificar</button>
+                        <button class="btn-solve" onclick="solveExercise(10)"><i class="fas fa-lightbulb"></i> Resolver</button>
+                    </div>
+                    
+                    <div class="feedback" id="ex10_feedback"></div>
+                    <div class="result-section" id="ex10_result"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="progress-container">
+            <h4>Progreso de Ejercicios</h4>
+            <div class="progress" style="height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <p id="progressText" class="mt-2">0% completado</p>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Fórmulas Empíricas y Moleculares | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        // Datos de los 10 ejercicios
+        const exercisesData = [
+            { // Ejercicio 1
+                empirical: "CH2O",
+                molecular: "C6H12O6",
+                weight: 180
+            },
+            { // Ejercicio 2
+                empirical: "CH2",
+                molecular: "C4H8",
+                weight: 56
+            },
+            { // Ejercicio 3
+                empirical: "CH4N2O",
+                molecular: "C2H8N4O2",
+                weight: 150
+            },
+            { // Ejercicio 4
+                empirical: "CH",
+                molecular: "C6H6",
+                weight: 78
+            },
+            { // Ejercicio 5
+                empirical: "C2H6O",
+                molecular: "C2H6O",
+                weight: 46
+            },
+            { // Ejercicio 6
+                empirical: "C3H8O",
+                molecular: "C3H8O",
+                weight: 60
+            },
+            { // Ejercicio 7
+                empirical: "C4H10O",
+                molecular: "C4H10O",
+                weight: 74
+            },
+            { // Ejercicio 8
+                empirical: "C5H12",
+                molecular: "C5H12",
+                weight: 72
+            },
+            { // Ejercicio 9
+                empirical: "C6H6O",
+                molecular: "C6H6O",
+                weight: 94
+            },
+            { // Ejercicio 10
+                empirical: "C7H8O",
+                molecular: "C7H8O",
+                weight: 108
+            }
+        ];
+
+        let correctAnswers = 0;
+        const totalQuestions = 10;
+
+        function checkExercise(exerciseNum) {
+            const exercise = exercisesData[exerciseNum - 1];
+            const empiricalInput = document.getElementById(`ex${exerciseNum}_empirical`).value.trim();
+            const molecularInput = document.getElementById(`ex${exerciseNum}_molecular`).value.trim();
+            const feedback = document.getElementById(`ex${exerciseNum}_feedback`);
+            
+            feedback.style.display = 'block';
+            
+            let isCorrect = true;
+            let message = '';
+            
+            if (empiricalInput.toUpperCase() !== exercise.empirical) {
+                isCorrect = false;
+                message += `<div>✗ Fórmula empírica incorrecta</div>`;
+            } else {
+                message += `<div>✓ Fórmula empírica correcta</div>`;
+            }
+            
+            if (molecularInput.toUpperCase() !== exercise.molecular) {
+                isCorrect = false;
+                message += `<div>✗ Fórmula molecular incorrecta</div>`;
+            } else {
+                message += `<div>✓ Fórmula molecular correcta</div>`;
+            }
+            
+            if (isCorrect) {
+                feedback.className = 'feedback correct';
+                message += `<div><strong>¡Perfecto! Todas las respuestas son correctas.</strong></div>`;
+                
+                if (!document.getElementById(`ex${exerciseNum}_empirical`).classList.contains('answered-correct')) {
+                    document.getElementById(`ex${exerciseNum}_empirical`).classList.add('answered-correct');
+                    correctAnswers++;
+                    updateProgress();
+                }
+            } else {
+                feedback.className = 'feedback incorrect';
+                message += `<div><strong>Respuestas correctas:</strong> ${exercise.empirical} y ${exercise.molecular}</div>`;
+            }
+            
+            feedback.innerHTML = message;
+        }
+
+        function solveExercise(exerciseNum) {
+            const exercise = exercisesData[exerciseNum - 1];
+            document.getElementById(`ex${exerciseNum}_empirical`).value = exercise.empirical;
+            document.getElementById(`ex${exerciseNum}_molecular`).value = exercise.molecular;
+            
+            const resultDiv = document.getElementById(`ex${exerciseNum}_result`);
+            resultDiv.innerHTML = `
+                <div><strong>Resolución paso a paso:</strong></div>
+                <div>1. Fórmula empírica determinada: ${exercise.empirical}</div>
+                <div>2. Masa de la fórmula empírica: ${calculateEmpiricalMass(exercise.empirical)} g/mol</div>
+                <div>3. Factor n = ${exercise.weight} / ${calculateEmpiricalMass(exercise.empirical)} ≈ ${Math.round(exercise.weight / calculateEmpiricalMass(exercise.empirical))}</div>
+                <div>4. Fórmula molecular: ${exercise.molecular}</div>
+                <div>5. Masa molecular calculada: ${exercise.weight} g/mol</div>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateEmpiricalMass(formula) {
+            // Cálculo simplificado de masa empírica
+            const masses = {
+                'C': 12.01, 'H': 1.008, 'O': 16.00, 'N': 14.01
+            };
+            
+            let mass = 0;
+            let currentElement = '';
+            let currentCount = '';
+            
+            for (let char of formula) {
+                if (char.match(/[A-Z]/)) {
+                    if (currentElement) {
+                        mass += masses[currentElement] * (currentCount ? parseInt(currentCount) : 1);
+                    }
+                    currentElement = char;
+                    currentCount = '';
+                } else if (char.match(/[a-z]/)) {
+                    currentElement += char;
+                } else if (char.match(/\d/)) {
+                    currentCount += char;
+                }
+            }
+            
+            if (currentElement) {
+                mass += masses[currentElement] * (currentCount ? parseInt(currentCount) : 1);
+            }
+            
+            return Math.round(mass);
+        }
+
+        function updateProgress() {
+            const progress = (correctAnswers / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${Math.round(progress)}% completado (${correctAnswers}/${totalQuestions} ejercicios)`;
+        }
+
+        function showResults() {
+            const percentage = (correctAnswers / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente! Dominas completamente el cálculo de fórmulas.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los métodos de cálculo.';
+            } else {
+                message = 'Revisa la teoría y practica más ejercicios.';
+            }
+            
+            alert(`Resultados:\n${correctAnswers}/${totalQuestions} ejercicios correctos (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const feedback = document.getElementById(`feedback${this.id.replace('ex', '').replace('_empirical', '').replace('_molecular', '')}`);
+                    if (feedback) {
+                        feedback.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

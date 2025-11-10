@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculos Estequiométricos - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .question-block {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .theory-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .theory-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .theory-content {
+            line-height: 1.8;
+        }
+
+        .theory-point {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .theory-point h4 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-calculator"></i> Cálculos Estequiométricos</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">Reactivo Limitante</span> <span class="info-badge">Rendimiento</span> <span class="info-badge">Pureza</span></p>
+        </header>
+
+        <!-- Sección de Estudio Teórico -->
+        <section class="theory-section">
+            <h2 class="theory-title"><i class="fas fa-book"></i> Conceptos Fundamentales</h2>
+            <div class="theory-content">
+                <div class="theory-point">
+                    <h4><i class="fas fa-1"></i> Reactivo Limitante</h4>
+                    <p>Es el reactivo que se consume por completo en una reacción química y determina la cantidad máxima de producto que se puede formar.</p>
+                    <div class="example-box">
+                        Ejemplo: Si tenemos 2 moles de H₂ y 1 mol de O₂, el O₂ es el reactivo limitante en la formación de agua.
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-2"></i> Reactivo en Exceso</h4>
+                    <p>Es el reactivo que no se consume completamente en una reacción química y queda sin reaccionar después de que el reactivo limitante se ha agotado.</p>
+                    <div class="example-box">
+                        Ejemplo: En la reacción anterior, el H₂ está en exceso.
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-3"></i> Rendimiento Teórico</h4>
+                    <p>Es la cantidad máxima de producto que se puede obtener de una reacción química, calculada a partir de la estequiometría de la reacción.</p>
+                    <div class="example-box">
+                        Rendimiento teórico = (masa del reactivo limitante / masa molar) × (relación molar) × (masa molar del producto)
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-4"></i> Pureza</h4>
+                    <p>Es la proporción de una sustancia pura en una muestra. Se expresa como porcentaje.</p>
+                    <div class="example-box">
+                        Pureza = (masa de sustancia pura / masa total de la muestra) × 100%
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-5"></i> Pasos para Resolver Problemas Estequiométricos</h4>
+                    <p>1. Escribir y balancear la ecuación química.<br>
+                       2. Convertir las cantidades dadas a moles.<br>
+                       3. Identificar el reactivo limitante.<br>
+                       4. Calcular los moles de producto formado.<br>
+                       5. Convertir los moles de producto a la unidad solicitada.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Cálculos Estequiométricos</h2>
+            <p>Practica tus conocimientos con estos ejercicios interactivos</p>
+        </section>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">1</span> Reacción de Intercambio</h2>
+            <div class="exercise-content">
+                <p>Se añaden 2,00 g de nitrato de plomo(II) a una disolución acuosa que contiene 1,00 g de yoduro de potasio, ocurre una reacción de intercambio:</p>
+                <p class="text-center"><strong>Pb(NO₃)₂ + 2KI → PbI₂ + 2KNO₃</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la masa de yoduro de plomo(II) obtenida.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1a" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('1a', '1.30')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de plomo contenida en los 2,00 g de nitrato de plomo(II).</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('1b', '1.25')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule la masa que queda sin reaccionar de la sustancia que está en exceso.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('1c', '0.21')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">2</span> Combustión del Aluminio</h2>
+            <div class="exercise-content">
+                <p>Cuando 4 g de aluminio se queman con 40 g de dioxígeno se produce un sólido blanco (óxido de aluminio):</p>
+                <p class="text-center"><strong>4Al + 3O₂ → 2Al₂O₃</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) La masa de aluminio que reacciona.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2a" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('2a', '4.00')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) La masa de dioxígeno que queda sin reaccionar.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('2b', '36.44')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) La masa que se forma de óxido de aluminio.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('2c', '7.56')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">3</span> Formación de Yoduro de Magnesio</h2>
+            <div class="exercise-content">
+                <p>Calcule la masa de yoduro de magnesio que se puede formar por reacción de 5 g de magnesio con 5 g de diyodo:</p>
+                <p class="text-center"><strong>Mg + I₂ → MgI₂</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Masa de yoduro de magnesio que se forma.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3a" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('3a', '13.06')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Del reactivo que queda en exceso, calcule la masa que no reacciona.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('3b', '3.94')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">4</span> Desproporción del Hipoclorito</h2>
+            <div class="exercise-content">
+                <p>Al calentar hipoclorito de sodio, se desproporciona en cloruro y clorato de sodio:</p>
+                <p class="text-center"><strong>3NaClO → 2NaCl + NaClO₃</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la masa de hipoclorito de sodio que permite obtener 60 g del cloruro.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4a" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('4a', '128.57')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de clorato de sodio obtenida.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('4b', '68.57')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule la masa de sodio contenida en los 50 g de cloruro de sodio.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('4c', '19.66')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">5</span> Reacción de Neutralización</h2>
+            <div class="exercise-content">
+                <p>Se hacen reaccionar 10 g de hidróxido de sodio con 15 g de ácido clorhídrico:</p>
+                <p class="text-center"><strong>NaOH + HCl → NaCl + H₂O</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Identifique el reactivo limitante.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5a" class="answer-input" placeholder="Nombre del reactivo">
+                    <button class="btn-check" onclick="checkAnswer('5a', 'HCl')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de cloruro de sodio formada.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('5b', '24.01')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule la masa del reactivo en exceso que queda sin reaccionar.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('5c', '5.90')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">6</span> Síntesis de Amoníaco</h2>
+            <div class="exercise-content">
+                <p>En la síntesis de amoníaco a partir de nitrógeno e hidrógeno:</p>
+                <p class="text-center"><strong>N₂ + 3H₂ → 2NH₃</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Si se parte de 28 g de N₂ y 10 g de H₂, ¿cuál es el reactivo limitante?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6a" class="answer-input" placeholder="Nombre del reactivo">
+                    <button class="btn-check" onclick="checkAnswer('6a', 'H2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de amoníaco que se puede obtener.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('6b', '56.67')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) ¿Qué masa del reactivo en exceso queda sin reaccionar?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('6c', '21.33')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">7</span> Combustión del Metano</h2>
+            <div class="exercise-content">
+                <p>En la combustión completa del metano:</p>
+                <p class="text-center"><strong>CH₄ + 2O₂ → CO₂ + 2H₂O</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Si se queman 16 g de metano con 64 g de oxígeno, ¿cuál es el reactivo limitante?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7a" class="answer-input" placeholder="Nombre del reactivo">
+                    <button class="btn-check" onclick="checkAnswer('7a', 'CH4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de dióxido de carbono producida.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('7b', '44.00')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) ¿Qué masa de oxígeno queda sin reaccionar?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('7c', '32.00')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 8 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">8</span> Descomposición del Carbonato de Calcio</h2>
+            <div class="exercise-content">
+                <p>Al calentar carbonato de calcio se descompone en óxido de calcio y dióxido de carbono:</p>
+                <p class="text-center"><strong>CaCO₃ → CaO + CO₂</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la masa de óxido de calcio que se obtiene a partir de 100 g de carbonato de calcio puro.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8a" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('8a', '56.00')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Si el carbonato de calcio tiene una pureza del 90%, ¿qué masa de óxido de calcio se obtendría de 100 g de muestra?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('8b', '50.40')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 9 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">9</span> Reacción de Precipitación</h2>
+            <div class="exercise-content">
+                <p>Al mezclar soluciones de nitrato de plata y cloruro de sodio se forma un precipitado de cloruro de plata:</p>
+                <p class="text-center"><strong>AgNO₃ + NaCl → AgCl + NaNO₃</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Si se mezclan 34 g de AgNO₃ con 15 g de NaCl, ¿cuál es el reactivo limitante?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9a" class="answer-input" placeholder="Nombre del reactivo">
+                    <button class="btn-check" onclick="checkAnswer('9a', 'NaCl')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de cloruro de plata que se forma.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('9b', '36.65')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) ¿Qué masa del reactivo en exceso queda sin reaccionar?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('9c', '12.35')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 10 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">10</span> Reducción de Óxido de Hierro</h2>
+            <div class="exercise-content">
+                <p>El óxido de hierro(III) se reduce con monóxido de carbono para producir hierro metálico:</p>
+                <p class="text-center"><strong>Fe₂O₃ + 3CO → 2Fe + 3CO₂</strong></p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la masa de hierro que se puede obtener a partir de 160 g de Fe₂O₃.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10a" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('10a', '112.00')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) ¿Qué masa de CO se necesita para reducir completamente 160 g de Fe₂O₃?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('10b', '84.00')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Si se utiliza un exceso del 20% de CO, ¿qué masa total de CO se necesitaría?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10c" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('10c', '100.80')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Cálculos Estequiométricos | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const userAnswer = document.getElementById(`answer${questionId}`).value.trim();
+            const feedback = document.getElementById(`feedback${questionId}`);
+            
+            feedback.style.display = 'block';
+            
+            const normalizedUserAnswer = userAnswer.toLowerCase().replace(/\s+/g, ' ');
+            const normalizedCorrectAnswer = correctAnswer.toLowerCase().replace(/\s+/g, ' ');
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! Respuesta exacta.';
+                document.getElementById(`answer${questionId}`).style.borderColor = '#27ae60';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                document.getElementById(`answer${questionId}`).style.borderColor = '#e74c3c';
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const totalQuestions = 25;
+            
+            // Verificar todas las respuestas
+            const answers = [
+                { id: '1a', correct: '1.30' },
+                { id: '1b', correct: '1.25' },
+                { id: '1c', correct: '0.21' },
+                { id: '2a', correct: '4.00' },
+                { id: '2b', correct: '36.44' },
+                { id: '2c', correct: '7.56' },
+                { id: '3a', correct: '13.06' },
+                { id: '3b', correct: '3.94' },
+                { id: '4a', correct: '128.57' },
+                { id: '4b', correct: '68.57' },
+                { id: '4c', correct: '19.66' },
+                { id: '5a', correct: 'HCl' },
+                { id: '5b', correct: '24.01' },
+                { id: '5c', correct: '5.90' },
+                { id: '6a', correct: 'H2' },
+                { id: '6b', correct: '56.67' },
+                { id: '6c', correct: '21.33' },
+                { id: '7a', correct: 'CH4' },
+                { id: '7b', correct: '44.00' },
+                { id: '7c', correct: '32.00' },
+                { id: '8a', correct: '56.00' },
+                { id: '8b', correct: '50.40' },
+                { id: '9a', correct: 'NaCl' },
+                { id: '9b', correct: '36.65' },
+                { id: '9c', correct: '12.35' },
+                { id: '10a', correct: '112.00' },
+                { id: '10b', correct: '84.00' },
+                { id: '10c', correct: '100.80' }
+            ];
+            
+            answers.forEach(answer => {
+                const userAnswer = document.getElementById(`answer${answer.id}`).value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const correctAnswer = answer.correct.toLowerCase().replace(/\s+/g, ' ');
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente trabajo! Dominas los cálculos estequiométricos.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los conceptos teóricos.';
+            } else {
+                message = 'Revisa la sección de estudio teórico y practica más.';
+            }
+            
+            alert(`Resultados:\n${score}/${totalQuestions} respuestas correctas (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#34495e';
+                    const feedback = document.getElementById(`feedback${this.id.replace('answer', '')}`);
+                    feedback.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

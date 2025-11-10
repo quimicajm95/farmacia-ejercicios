@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmaciaQuímica - Plataforma Educativa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .topic-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .topic-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--warning-color);
+        }
+
+        .topic-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .topic-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .topic-body {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .animated-btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .animated-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .animated-btn i {
+            font-size: 1.5rem;
+        }
+
+        .icon-pharmacy {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--warning-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: var(--warning-color);
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* Animaciones */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-pills"></i> FarmaciaQuímica</h1>
+            <p>Plataforma Interactiva de Química para Ciencias Farmacéuticas</p>
+            <p><span class="info-badge">Nomenclatura</span> <span class="info-badge">Fórmulas</span> <span class="info-badge">Estructuras</span> <span class="info-badge">Solubilidad</span> <span class="info-badge">Estequiometría</span></p>
+        </header>
+
+        <section class="section-header" id="temas">
+            <h2><i class="fas fa-book-open"></i> Temas de Estudio</h2>
+            <p>Selecciona un tema para comenzar con los ejercicios interactivos</p>
+        </section>
+
+        <div class="topics-grid">
+            <!-- Tema 1: Nomenclatura Química -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-flask icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Nomenclatura Química</h2>
+                    <p class="topic-description">100 ejercicios de nomenclatura orgánica e inorgánica con retroalimentación instantánea</p>
+                </div>
+                <div class="topic-body">
+                    <a href="nomenclatura.html" class="animated-btn">
+                        <i class="fas fa-book-open"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 2: Fórmula Empírica y Fórmula Molecular -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-calculator icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Fórmula Empírica y Fórmula Molecular</h2>
+                    <p class="topic-description">100 problemas de cálculo de fórmulas a partir de composición porcentual y masa molecular</p>
+                </div>
+                <div class="topic-body">
+                    <a href="formulas.html" class="animated-btn">
+                        <i class="fas fa-chart-line"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 3: Estructuras de Lewis e Hibridación -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-atom icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Estructuras de Lewis e Hibridación</h2>
+                    <p class="topic-description">100 ejercicios de desarrollo de estructuras de Lewis usando VSEPR y teoría de enlace de valencia</p>
+                </div>
+                <div class="topic-body">
+                    <a href="lewis.html" class="animated-btn">
+                        <i class="fas fa-project-diagram"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 4: Solubilidad y cálculo de concentraciones -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-vial icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Solubilidad y cálculo de concentraciones</h2>
+                    <p class="topic-description">100 ejercicios sobre solubilidad, unidades de concentración y preparación de disoluciones</p>
+                </div>
+                <div class="topic-body">
+                    <a href="solubilidad.html" class="animated-btn">
+                        <i class="fas fa-tint"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 5: Ajuste de ecuaciones -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-balance-scale icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Ajuste de ecuaciones</h2>
+                    <p class="topic-description">100 ejercicios de balanceo de ecuaciones químicas por distintos métodos</p>
+                </div>
+                <div class="topic-body">
+                    <a href="ajuste.html" class="animated-btn">
+                        <i class="fas fa-equals"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 6: Estequiometría -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-weight-hanging icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Estequiometría</h2>
+                    <p class="topic-description">100 problemas de cálculos estequiométricos, reactivo limitante y rendimiento de reacción</p>
+                </div>
+                <div class="topic-body">
+                    <a href="estequiometria.html" class="animated-btn">
+                        <i class="fas fa-percentage"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 7: Termoquímica -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-fire icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Termoquímica</h2>
+                    <p class="topic-description">100 ejercicios sobre entalpía, entropía, energía libre y cálculos termodinámicos</p>
+                </div>
+                <div class="topic-body">
+                    <a href="Termoquimica_1.html" class="animated-btn">
+                        <i class="fas fa-thermometer-half"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 8: Cinética Química -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-clock icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Cinética Química</h2>
+                    <p class="topic-description">100 ejercicios sobre velocidad de reacción, órdenes de reacción y mecanismos de reacción</p>
+                </div>
+                <div class="topic-body">
+                    <a href="cinetica.html" class="animated-btn">
+                        <i class="fas fa-hourglass-half"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tema 9: Ejercicios Combinados -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <i class="fas fa-puzzle-piece icon-pharmacy pulse-animation"></i>
+                    <h2 class="topic-title">Ejercicios Combinados</h2>
+                    <p class="topic-description">100 ejercicios integradores que combinan múltiples conceptos para evaluación completa</p>
+                </div>
+                <div class="topic-body">
+                    <a href="combinados.html" class="animated-btn">
+                        <i class="fas fa-brain"></i> Empezar Ejercicios
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 FarmaciaQuímica - Todos los derechos reservados</p>
+            <div class="footer-links">
+                <a href="#" target="_blank"><i class="fas fa-file-alt"></i> Documentación</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animación adicional para botones
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.animated-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 6px 20px rgba(52, 152, 219, 0.4)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.3)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

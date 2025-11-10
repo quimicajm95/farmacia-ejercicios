@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termoquímica - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--thermo-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--thermo-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .question-block {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .theory-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .theory-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--thermo-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--thermo-color);
+        }
+
+        .theory-content {
+            line-height: 1.8;
+        }
+
+        .theory-point {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--thermo-color);
+        }
+
+        .theory-point h4 {
+            color: var(--thermo-color);
+            margin-bottom: 10px;
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--thermo-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--thermo-color);
+            font-weight: bold;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .formula-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            text-align: center;
+            font-size: 1.2rem;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-fire"></i> Termoquímica</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">Entalpía</span> <span class="info-badge">Entropía</span> <span class="info-badge">Energía Libre</span> <span class="info-badge">ΔG</span></p>
+        </header>
+
+        <!-- Sección de Estudio Teórico -->
+        <section class="theory-section">
+            <h2 class="theory-title"><i class="fas fa-book"></i> Conceptos Fundamentales de Termoquímica</h2>
+            <div class="theory-content">
+                <div class="theory-point">
+                    <h4><i class="fas fa-1"></i> Entalpía (ΔH)</h4>
+                    <p>Es el contenido de calor de un sistema a presión constante. La variación de entalpía (ΔH) indica si una reacción es exotérmica (ΔH < 0) o endotérmica (ΔH > 0).</p>
+                    <div class="example-box">
+                        ΔH°reacción = ΣΔH°f(productos) - ΣΔH°f(reactivos)
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-2"></i> Entropía (S)</h4>
+                    <p>Es una medida del desorden o aleatoriedad de un sistema. La variación de entropía (ΔS) indica si aumenta (ΔS > 0) o disminuye (ΔS < 0) el desorden.</p>
+                    <div class="example-box">
+                        ΔS°reacción = ΣS°(productos) - ΣS°(reactivos)
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-3"></i> Energía Libre de Gibbs (ΔG)</h4>
+                    <p>Indica la espontaneidad de una reacción a temperatura y presión constantes. Si ΔG < 0, la reacción es espontánea.</p>
+                    <div class="example-box">
+                        ΔG = ΔH - TΔS
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-4"></i> Relación entre ΔG, ΔH y ΔS</h4>
+                    <p>La espontaneidad de una reacción depende de la combinación de ΔH y ΔS:</p>
+                    <div class="example-box">
+                        ΔH negativo y ΔS positivo → Siempre espontánea (ΔG < 0)<br>
+                        ΔH positivo y ΔS negativo → Nunca espontánea (ΔG > 0)<br>
+                        ΔH negativo y ΔS negativo → Espontánea a bajas temperaturas<br>
+                        ΔH positivo y ΔS positivo → Espontánea a altas temperaturas
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-5"></i> Pasos para Resolver Problemas Termoquímicos</h4>
+                    <p>1. Escribir y balancear la ecuación química.<br>
+                       2. Calcular ΔH°reacción usando entalpías de formación.<br>
+                       3. Calcular ΔS°reacción usando entropías estándar.<br>
+                       4. Calcular ΔG°reacción usando ΔG = ΔH - TΔS.<br>
+                       5. Determinar la espontaneidad de la reacción.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Termoquímica</h2>
+            <p>Practica tus conocimientos con estos ejercicios interactivos</p>
+        </section>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">1</span> Disolución de Cloruro de Zinc</h2>
+            <div class="exercise-content">
+                <p>A partir de los datos siguientes:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ZnCl₂(s)</td>
+                            <td>-416,1</td>
+                            <td>108,5</td>
+                        </tr>
+                        <tr>
+                            <td>Zn²⁺(ac)</td>
+                            <td>-152,5</td>
+                            <td>-106,6</td>
+                        </tr>
+                        <tr>
+                            <td>Cl⁻(ac)</td>
+                            <td>-167,5</td>
+                            <td>55,2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Calcule la energía libre molar a 25 °C del proceso representado por:</p>
+                <div class="formula-box">
+                    ZnCl₂(s) + agua → Zn²⁺(ac) + 2Cl⁻(ac)
+                </div>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ/mol)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1a" class="answer-input" placeholder="Respuesta en kJ/mol">
+                    <button class="btn-check" onclick="checkAnswer('1a', '-71.4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/(K·mol))</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1b" class="answer-input" placeholder="Respuesta en J/(K·mol)">
+                    <button class="btn-check" onclick="checkAnswer('1b', '-44.7')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ/mol)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1c" class="answer-input" placeholder="Respuesta en kJ/mol">
+                    <button class="btn-check" onclick="checkAnswer('1c', '-58.1')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">2</span> Formación de Agua</h2>
+            <div class="exercise-content">
+                <p>Para la reacción de formación de agua:</p>
+                <div class="formula-box">
+                    2H₂(g) + O₂(g) → 2H₂O(l)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>H₂(g)</td>
+                            <td>0</td>
+                            <td>130,7</td>
+                        </tr>
+                        <tr>
+                            <td>O₂(g)</td>
+                            <td>0</td>
+                            <td>205,2</td>
+                        </tr>
+                        <tr>
+                            <td>H₂O(l)</td>
+                            <td>-285,8</td>
+                            <td>70,0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('2a', '-571.6')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('2b', '-326.6')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('2c', '-474.3')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">3</span> Combustión del Metano</h2>
+            <div class="exercise-content">
+                <p>Para la combustión del metano:</p>
+                <div class="formula-box">
+                    CH₄(g) + 2O₂(g) → CO₂(g) + 2H₂O(l)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CH₄(g)</td>
+                            <td>-74,8</td>
+                            <td>186,3</td>
+                        </tr>
+                        <tr>
+                            <td>O₂(g)</td>
+                            <td>0</td>
+                            <td>205,2</td>
+                        </tr>
+                        <tr>
+                            <td>CO₂(g)</td>
+                            <td>-393,5</td>
+                            <td>213,8</td>
+                        </tr>
+                        <tr>
+                            <td>H₂O(l)</td>
+                            <td>-285,8</td>
+                            <td>70,0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('3a', '-890.3')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('3b', '-242.9')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) ¿Es espontánea esta reacción a 25°C?</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3c" class="answer-input" placeholder="Sí/No">
+                    <button class="btn-check" onclick="checkAnswer('3c', 'Sí')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">4</span> Descomposición del Carbonato de Calcio</h2>
+            <div class="exercise-content">
+                <p>Para la descomposición del carbonato de calcio:</p>
+                <div class="formula-box">
+                    CaCO₃(s) → CaO(s) + CO₂(g)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CaCO₃(s)</td>
+                            <td>-1207,0</td>
+                            <td>92,9</td>
+                        </tr>
+                        <tr>
+                            <td>CaO(s)</td>
+                            <td>-635,5</td>
+                            <td>39,8</td>
+                        </tr>
+                        <tr>
+                            <td>CO₂(g)</td>
+                            <td>-393,5</td>
+                            <td>213,8</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('4a', '178.0')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('4b', '160.7')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule la temperatura mínima para que la reacción sea espontánea (en °C)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4c" class="answer-input" placeholder="Respuesta en °C">
+                    <button class="btn-check" onclick="checkAnswer('4c', '834')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">5</span> Formación de Amoníaco</h2>
+            <div class="exercise-content">
+                <p>Para la síntesis de amoníaco:</p>
+                <div class="formula-box">
+                    N₂(g) + 3H₂(g) → 2NH₃(g)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>N₂(g)</td>
+                            <td>0</td>
+                            <td>191,6</td>
+                        </tr>
+                        <tr>
+                            <td>H₂(g)</td>
+                            <td>0</td>
+                            <td>130,7</td>
+                        </tr>
+                        <tr>
+                            <td>NH₃(g)</td>
+                            <td>-46,1</td>
+                            <td>192,5</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('5a', '-92.2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('5b', '-198.7')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 400°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('5c', '40.0')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">6</span> Combustión del Etanol</h2>
+            <div class="exercise-content">
+                <p>Para la combustión del etanol:</p>
+                <div class="formula-box">
+                    C₂H₅OH(l) + 3O₂(g) → 2CO₂(g) + 3H₂O(l)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>C₂H₅OH(l)</td>
+                            <td>-277,7</td>
+                            <td>160,7</td>
+                        </tr>
+                        <tr>
+                            <td>O₂(g)</td>
+                            <td>0</td>
+                            <td>205,2</td>
+                        </tr>
+                        <tr>
+                            <td>CO₂(g)</td>
+                            <td>-393,5</td>
+                            <td>213,8</td>
+                        </tr>
+                        <tr>
+                            <td>H₂O(l)</td>
+                            <td>-285,8</td>
+                            <td>70,0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('6a', '-1366.8')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('6b', '-138.9')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('6c', '-1325.4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">7</span> Formación de Cloruro de Sodio</h2>
+            <div class="exercise-content">
+                <p>Para la formación de cloruro de sodio a partir de sus elementos:</p>
+                <div class="formula-box">
+                    Na(s) + ½Cl₂(g) → NaCl(s)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Na(s)</td>
+                            <td>0</td>
+                            <td>51,3</td>
+                        </tr>
+                        <tr>
+                            <td>Cl₂(g)</td>
+                            <td>0</td>
+                            <td>223,1</td>
+                        </tr>
+                        <tr>
+                            <td>NaCl(s)</td>
+                            <td>-411,2</td>
+                            <td>72,1</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('7a', '-411.2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('7b', '-90.5')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('7c', '-384.2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 8 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">8</span> Oxidación del Hierro</h2>
+            <div class="exercise-content">
+                <p>Para la oxidación del hierro:</p>
+                <div class="formula-box">
+                    4Fe(s) + 3O₂(g) → 2Fe₂O₃(s)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fe(s)</td>
+                            <td>0</td>
+                            <td>27,3</td>
+                        </tr>
+                        <tr>
+                            <td>O₂(g)</td>
+                            <td>0</td>
+                            <td>205,2</td>
+                        </tr>
+                        <tr>
+                            <td>Fe₂O₃(s)</td>
+                            <td>-824,2</td>
+                            <td>87,4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('8a', '-1648.4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('8b', '-549.4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('8c', '-1484.6')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 9 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">9</span> Descomposición del Peróxido de Hidrógeno</h2>
+            <div class="exercise-content">
+                <p>Para la descomposición del peróxido de hidrógeno:</p>
+                <div class="formula-box">
+                    2H₂O₂(l) → 2H₂O(l) + O₂(g)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>H₂O₂(l)</td>
+                            <td>-187,8</td>
+                            <td>109,6</td>
+                        </tr>
+                        <tr>
+                            <td>H₂O(l)</td>
+                            <td>-285,8</td>
+                            <td>70,0</td>
+                        </tr>
+                        <tr>
+                            <td>O₂(g)</td>
+                            <td>0</td>
+                            <td>205,2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('9a', '-196.0')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('9b', '125.6')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('9c', '-233.4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 10 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">10</span> Combustión del Grafito</h2>
+            <div class="exercise-content">
+                <p>Para la combustión del grafito:</p>
+                <div class="formula-box">
+                    C(grafito) + O₂(g) → CO₂(g)
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sustancia</th>
+                            <th>ΔH°f (kJ/mol)</th>
+                            <th>S° (J/(K·mol))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>C(grafito)</td>
+                            <td>0</td>
+                            <td>5,7</td>
+                        </tr>
+                        <tr>
+                            <td>O₂(g)</td>
+                            <td>0</td>
+                            <td>205,2</td>
+                        </tr>
+                        <tr>
+                            <td>CO₂(g)</td>
+                            <td>-393,5</td>
+                            <td>213,8</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule ΔH° para la reacción (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10a" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('10a', '-393.5')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule ΔS° para la reacción (en J/K)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10b" class="answer-input" placeholder="Respuesta en J/K">
+                    <button class="btn-check" onclick="checkAnswer('10b', '2.9')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule ΔG° para la reacción a 25°C (en kJ)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10c" class="answer-input" placeholder="Respuesta en kJ">
+                    <button class="btn-check" onclick="checkAnswer('10c', '-394.4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Termoquímica | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const userAnswer = document.getElementById(`answer${questionId}`).value.trim();
+            const feedback = document.getElementById(`feedback${questionId}`);
+            
+            feedback.style.display = 'block';
+            
+            const normalizedUserAnswer = userAnswer.toLowerCase().replace(/\s+/g, ' ');
+            const normalizedCorrectAnswer = correctAnswer.toLowerCase().replace(/\s+/g, ' ');
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! Respuesta exacta.';
+                document.getElementById(`answer${questionId}`).style.borderColor = '#27ae60';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                document.getElementById(`answer${questionId}`).style.borderColor = '#e74c3c';
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const totalQuestions = 30;
+            
+            // Verificar todas las respuestas
+            const answers = [
+                { id: '1a', correct: '-71.4' },
+                { id: '1b', correct: '-44.7' },
+                { id: '1c', correct: '-58.1' },
+                { id: '2a', correct: '-571.6' },
+                { id: '2b', correct: '-326.6' },
+                { id: '2c', correct: '-474.3' },
+                { id: '3a', correct: '-890.3' },
+                { id: '3b', correct: '-242.9' },
+                { id: '3c', correct: 'Sí' },
+                { id: '4a', correct: '178.0' },
+                { id: '4b', correct: '160.7' },
+                { id: '4c', correct: '834' },
+                { id: '5a', correct: '-92.2' },
+                { id: '5b', correct: '-198.7' },
+                { id: '5c', correct: '40.0' },
+                { id: '6a', correct: '-1366.8' },
+                { id: '6b', correct: '-138.9' },
+                { id: '6c', correct: '-1325.4' },
+                { id: '7a', correct: '-411.2' },
+                { id: '7b', correct: '-90.5' },
+                { id: '7c', correct: '-384.2' },
+                { id: '8a', correct: '-1648.4' },
+                { id: '8b', correct: '-549.4' },
+                { id: '8c', correct: '-1484.6' },
+                { id: '9a', correct: '-196.0' },
+                { id: '9b', correct: '125.6' },
+                { id: '9c', correct: '-233.4' },
+                { id: '10a', correct: '-393.5' },
+                { id: '10b', correct: '2.9' },
+                { id: '10c', correct: '-394.4' }
+            ];
+            
+            answers.forEach(answer => {
+                const userAnswer = document.getElementById(`answer${answer.id}`).value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const correctAnswer = answer.correct.toLowerCase().replace(/\s+/g, ' ');
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente trabajo! Dominas la termoquímica.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los conceptos teóricos.';
+            } else {
+                message = 'Revisa la sección de estudio teórico y practica más.';
+            }
+            
+            alert(`Resultados:\n${score}/${totalQuestions} respuestas correctas (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#34495e';
+                    const feedback = document.getElementById(`feedback${this.id.replace('answer', '')}`);
+                    feedback.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

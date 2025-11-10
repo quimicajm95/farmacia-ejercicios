@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estructuras de Lewis e Hibridación - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            padding: 30px;
+        }
+
+        .exercise-title {
+            color: var(--warning-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .task-group {
+            margin-bottom: 25px;
+        }
+
+        .task-group h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            color: white;
+        }
+
+        .answers-section {
+            margin-top: 30px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .answer-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .atomic-mass {
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .theory-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .theory-step {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .theory-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .hybridization-info {
+            background: rgba(243, 156, 18, 0.2);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: var(--warning-color);
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .task-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-atom"></i> Estructuras de Lewis e Hibridación</h1>
+            <p>Representación de estructuras moleculares y orbitales híbridos</p>
+            <p><span class="atomic-mass">H: 1.008</span> <span class="atomic-mass">C: 12.011</span> <span class="atomic-mass">N: 14.007</span> <span class="atomic-mass">O: 15.999</span> <span class="atomic-mass">F: 18.998</span> <span class="atomic-mass">P: 30.974</span> <span class="atomic-mass">S: 32.06</span> <span class="atomic-mass">Cl: 35.45</span></p>
+        </header>
+
+        <section class="theory-section">
+            <h2 class="exercise-title"><i class="fas fa-book"></i> Estudio Teórico: Estructuras de Lewis</h2>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">1</span> Determinar los átomos y electrones de valencia</h3>
+                <p>Identifica todos los átomos en la molécula y determina el número de electrones de valencia de cada uno. Los electrones de valencia son los electrones en la capa más externa del átomo.</p>
+            </div>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">2</span> Seleccionar el átomo central</h3>
+                <p>Generalmente, el átomo menos electronegativo (excepto el hidrógeno) se coloca en el centro. En moléculas orgánicas, el carbono suele ser el átomo central.</p>
+            </div>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">3</span> Conectar átomos con enlaces simples</h3>
+                <p>Une todos los átomos al átomo central con enlaces simples. Cada enlace simple representa un par de electrones compartidos.</p>
+            </div>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">4</span> Distribuir electrones restantes</h3>
+                <p>Coloca los electrones restantes como pares solitarios en los átomos, comenzando por los átomos más electronegativos. Cada átomo (excepto el hidrógeno) debe completar su octeto.</p>
+            </div>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">5</span> Verificar el octeto</h3>
+                <p>Asegúrate de que todos los átomos (excepto el hidrógeno) tengan 8 electrones a su alrededor (enlaces + pares solitarios). Si algún átomo no tiene octeto, convierte pares solitarios en enlaces múltiples.</p>
+            </div>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">6</span> Calcular cargas formales</h3>
+                <p>Calcula la carga formal de cada átomo usando la fórmula: Carga formal = e⁻ valencia - (e⁻ pares solitarios + ½ e⁻ enlazantes). La estructura con cargas formales más cercanas a cero es generalmente la más estable.</p>
+            </div>
+            
+            <div class="theory-step">
+                <h3><span class="step-number">7</span> Determinar la hibridación</h3>
+                <p>Para determinar la hibridación de un átomo, cuenta el número de átomos enlazados + pares solitarios. 2 = sp, 3 = sp², 4 = sp³, 5 = sp³d, 6 = sp³d².</p>
+                <div class="hybridization-info">
+                    <strong>Esquema de hibridación:</strong>
+                    <ul>
+                        <li><strong>sp:</strong> Geometría lineal (180°)</li>
+                        <li><strong>sp²:</strong> Geometría trigonal plana (120°)</li>
+                        <li><strong>sp³:</strong> Geometría tetraédrica (109.5°)</li>
+                        <li><strong>sp³d:</strong> Geometría bipiramidal trigonal (90°, 120°)</li>
+                        <li><strong>sp³d²:</strong> Geometría octaédrica (90°)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="exercise-card">
+            <h2 class="exercise-title">Ejercicio 1: Compuestos Covalentes Simples</h2>
+            <div class="task-group">
+                <h3><i class="fas fa-project-diagram"></i> Representa la estructura de Lewis y representa el esquema de hibridación para:</h3>
+                <div class="task-item">
+                    <span>1. BF₃</span>
+                    <span id="ans1-1">-</span>
+                </div>
+                <div class="task-item">
+                    <span>2. CCl₄</span>
+                    <span id="ans1-2">-</span>
+                </div>
+                <div class="task-item">
+                    <span>3. SiH₄</span>
+                    <span id="ans1-3">-</span>
+                </div>
+                <div class="task-item">
+                    <span>4. NF₃</span>
+                    <span id="ans1-4">-</span>
+                </div>
+                <div class="task-item">
+                    <span>5. HCN</span>
+                    <span id="ans1-5">-</span>
+                </div>
+                <div class="task-item">
+                    <span>6. N₂F₂</span>
+                    <span id="ans1-6">-</span>
+                </div>
+                <div class="task-item">
+                    <span>7. C₂F₄</span>
+                    <span id="ans1-7">-</span>
+                </div>
+                <div class="task-item">
+                    <span>8. H₂Se</span>
+                    <span id="ans1-8">-</span>
+                </div>
+                <div class="task-item">
+                    <span>9. GeH₄</span>
+                    <span id="ans1-9">-</span>
+                </div>
+                <div class="task-item">
+                    <span>10. AsH₃</span>
+                    <span id="ans1-10">-</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" onclick="mostrarRespuestas()">
+            <i class="fas fa-check-circle"></i> Generar Respuestas
+        </button>
+
+        <div class="answers-section" style="display: none;" id="respuestas">
+            <h2 class="exercise-title"><i class="fas fa-list-ul"></i> Respuestas</h2>
+            
+            <div class="answer-item">
+                <strong>Ejercicio 1:</strong>
+                <ul>
+                    <li><strong>1. BF₃:</strong> El boro es el átomo central con tres enlaces simples a flúor y sin pares de electrones no enlazantes. <strong>Hibridación: sp²</strong> - Geometría trigonal plana con ángulos de enlace de 120°.</li>
+                    <li><strong>2. CCl₄:</strong> El carbono es el átomo central con cuatro enlaces simples a cloro y sin pares de electrones no enlazantes. <strong>Hibridación: sp³</strong> - Geometría tetraédrica con ángulos de enlace de 109.5°.</li>
+                    <li><strong>3. SiH₄:</strong> El silicio es el átomo central con cuatro enlaces simples a hidrógeno y sin pares de electrones no enlazantes. <strong>Hibridación: sp³</strong> - Geometría tetraédrica con ángulos de enlace de 109.5°.</li>
+                    <li><strong>4. NF₃:</strong> El nitrógeno es el átomo central con tres enlaces simples a flúor y un par de electrones no enlazantes. <strong>Hibridación: sp³</strong> - Geometría piramidal trigonal con ángulos de enlace ligeramente menores a 109.5°.</li>
+                    <li><strong>5. HCN:</strong> Enlace triple entre carbono y nitrógeno, y enlace simple entre carbono e hidrógeno. <strong>Hibridación: C (sp), N (sp)</strong> - Geometría lineal con ángulos de enlace de 180°.</li>
+                    <li><strong>6. N₂F₂:</strong> Dos átomos de nitrógeno con enlace doble, cada uno enlazado a un flúor. <strong>Hibridación: N (sp²)</strong> - Geometría trigonal plana con ángulos de enlace de aproximadamente 120°.</li>
+                    <li><strong>7. C₂F₄:</strong> Dos átomos de carbono con enlace doble, cada uno enlazado a dos flúor. <strong>Hibridación: C (sp²)</strong> - Geometría trigonal plana con ángulos de enlace de aproximadamente 120°.</li>
+                    <li><strong>8. H₂Se:</strong> El selenio es el átomo central con dos enlaces simples a hidrógeno y dos pares de electrones no enlazantes. <strong>Hibridación: sp³</strong> - Geometría angular con ángulos de enlace de aproximadamente 104.5°.</li>
+                    <li><strong>9. GeH₄:</strong> El germanio es el átomo central con cuatro enlaces simples a hidrógeno y sin pares de electrones no enlazantes. <strong>Hibridación: sp³</strong> - Geometría tetraédrica con ángulos de enlace de 109.5°.</li>
+                    <li><strong>10. AsH₃:</strong> El arsénico es el átomo central con tres enlaces simples a hidrógeno y un par de electrones no enlazantes. <strong>Hibridación: sp³</strong> - Geometría piramidal trigonal con ángulos de enlace ligeramente menores a 109.5°.</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 FarmaciaQuímica - Todos los derechos reservados</p>
+            <div class="footer-links">
+                <a href="index.html"><i class="fas fa-home"></i> Volver al Inicio</a>
+                <a href="#" target="_blank"><i class="fas fa-file-alt"></i> Documentación</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function mostrarRespuestas() {
+            document.getElementById('respuestas').style.display = 'block';
+        }
+        
+        // Animación para botones
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 6px 20px rgba(52, 152, 219, 0.4)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 4px 15px rgba(52, 152, 219, 0.3)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

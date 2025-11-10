@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solubilidad y Cálculo de Concentraciones - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .question-block {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-vial"></i> Solubilidad y Cálculo de Concentraciones</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">Concentración</span> <span class="info-badge">Solubilidad</span> <span class="info-badge">Disoluciones</span> <span class="info-badge">Porcentajes</span></p>
+        </header>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Solubilidad y Concentraciones</h2>
+            <p>Practica tus conocimientos con estos ejercicios de cálculo</p>
+        </section>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">1</span> Concentración Másica</h2>
+            <div class="exercise-content">
+                <p>Se prepara una disolución disolviendo 20,5 g de sacarosa (C₁₂H₂₂O₁₁) en suficiente agua para obtener 150 g de disolución cuya densidad es de 1,051 g/mL.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la concentración másica de la disolución.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1a" class="answer-input" placeholder="Respuesta en g/L">
+                    <button class="btn-check" onclick="checkAnswer('1a', '143.5')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la concentración de cantidad de sustancia (molaridad).</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1b" class="answer-input" placeholder="Respuesta en mol/L">
+                    <button class="btn-check" onclick="checkAnswer('1b', '0.419')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">2</span> Molalidad y Porcentaje</h2>
+            <div class="exercise-content">
+                <p>Se disuelven 15 g de cloruro de sodio (NaCl) en 200 g de agua, formando una disolución con densidad 1,08 g/mL.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la molalidad de la disolución.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2a" class="answer-input" placeholder="Respuesta en mol/kg">
+                    <button class="btn-check" onclick="checkAnswer('2a', '1.28')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule el tanto por ciento de masa.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2b" class="answer-input" placeholder="Respuesta en %">
+                    <button class="btn-check" onclick="checkAnswer('2b', '6.98')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">3</span> Dilución de Disoluciones</h2>
+            <div class="exercise-content">
+                <p>Se tiene una disolución de ácido sulfúrico (H₂SO₄) al 96% en masa con densidad 1,84 g/mL. Se toman 25 mL de esta disolución y se diluyen con agua hasta 500 mL.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la molaridad de la disolución concentrada.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3a" class="answer-input" placeholder="Respuesta en mol/L">
+                    <button class="btn-check" onclick="checkAnswer('3a', '18.0')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la molaridad de la disolución diluida.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3b" class="answer-input" placeholder="Respuesta en mol/L">
+                    <button class="btn-check" onclick="checkAnswer('3b', '0.90')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">4</span> Solubilidad y Precipitación</h2>
+            <div class="exercise-content">
+                <p>La solubilidad del sulfato de calcio (CaSO₄) en agua a 25°C es de 0,21 g/100 mL. Se prepara una disolución mezclando 0,5 g de CaSO₄ con 200 mL de agua.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine si se formará precipitado.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4a" class="answer-input" placeholder="Sí o No">
+                    <button class="btn-check" onclick="checkAnswer('4a', 'Sí')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la masa de precipitado que se formará.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4b" class="answer-input" placeholder="Respuesta en gramos">
+                    <button class="btn-check" onclick="checkAnswer('4b', '0.08')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">5</span> Fracción Molar</h2>
+            <div class="exercise-content">
+                <p>Se prepara una disolución mezclando 20 g de etanol (C₂H₅OH) con 80 g de agua (H₂O).</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la fracción molar del etanol.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5a" class="answer-input" placeholder="Respuesta sin unidades">
+                    <button class="btn-check" onclick="checkAnswer('5a', '0.089')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la fracción molar del agua.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5b" class="answer-input" placeholder="Respuesta sin unidades">
+                    <button class="btn-check" onclick="checkAnswer('5b', '0.911')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">6</span> Concentración en Partes por Millón</h2>
+            <div class="exercise-content">
+                <p>En un análisis de agua potable, se detecta que contiene 0,015 g de iones calcio (Ca²⁺) por litro de agua.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la concentración en partes por millón (ppm) de iones calcio.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6a" class="answer-input" placeholder="Respuesta en ppm">
+                    <button class="btn-check" onclick="checkAnswer('6a', '15')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Exprese esta concentración en mg/L.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6b" class="answer-input" placeholder="Respuesta en mg/L">
+                    <button class="btn-check" onclick="checkAnswer('6b', '15')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">7</span> Mezcla de Disoluciones</h2>
+            <div class="exercise-content">
+                <p>Se mezclan 100 mL de una disolución de NaCl 0,5 M con 150 mL de otra disolución de NaCl 0,8 M.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la molaridad de la disolución resultante.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7a" class="answer-input" placeholder="Respuesta en mol/L">
+                    <button class="btn-check" onclick="checkAnswer('7a', '0.68')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la concentración másica de la disolución resultante.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7b" class="answer-input" placeholder="Respuesta en g/L">
+                    <button class="btn-check" onclick="checkAnswer('7b', '39.7')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 8 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">8</span> Porcentaje en Volumen</h2>
+            <div class="exercise-content">
+                <p>Se prepara una disolución mezclando 25 mL de etanol con agua hasta completar 200 mL de disolución.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule el porcentaje en volumen de etanol en la disolución.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8a" class="answer-input" placeholder="Respuesta en %">
+                    <button class="btn-check" onclick="checkAnswer('8a', '12.5')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Si la densidad del etanol es 0,789 g/mL, calcule la concentración másica de etanol.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8b" class="answer-input" placeholder="Respuesta en g/L">
+                    <button class="btn-check" onclick="checkAnswer('8b', '98.6')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 9 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">9</span> Normalidad</h2>
+            <div class="exercise-content">
+                <p>Se tiene una disolución de ácido clorhídrico (HCl) al 37% en masa con densidad 1,19 g/mL.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la molaridad de la disolución.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9a" class="answer-input" placeholder="Respuesta en mol/L">
+                    <button class="btn-check" onclick="checkAnswer('9a', '12.1')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la normalidad de la disolución.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9b" class="answer-input" placeholder="Respuesta en eq/L">
+                    <button class="btn-check" onclick="checkAnswer('9b', '12.1')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 10 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">10</span> Solubilidad y Producto de Solubilidad</h2>
+            <div class="exercise-content">
+                <p>La solubilidad del cloruro de plata (AgCl) en agua a 25°C es 1,3×10⁻⁵ mol/L. El producto de solubilidad Kps del AgCl es 1,8×10⁻¹⁰.</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Calcule la solubilidad del AgCl en g/L.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10a" class="answer-input" placeholder="Respuesta en g/L">
+                    <button class="btn-check" onclick="checkAnswer('10a', '0.00186')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Verifique que el producto de solubilidad calculado a partir de la solubilidad coincide con el valor dado.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10b" class="answer-input" placeholder="Sí o No">
+                    <button class="btn-check" onclick="checkAnswer('10b', 'Sí')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Solubilidad y Cálculo de Concentraciones | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const userAnswer = document.getElementById(`answer${questionId}`).value.trim();
+            const feedback = document.getElementById(`feedback${questionId}`);
+            
+            feedback.style.display = 'block';
+            
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! Respuesta exacta.';
+                document.getElementById(`answer${questionId}`).style.borderColor = '#27ae60';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                document.getElementById(`answer${questionId}`).style.borderColor = '#e74c3c';
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const totalQuestions = 20;
+            
+            // Verificar todas las respuestas
+            const answers = [
+                { id: '1a', correct: '143.5' },
+                { id: '1b', correct: '0.419' },
+                { id: '2a', correct: '1.28' },
+                { id: '2b', correct: '6.98' },
+                { id: '3a', correct: '18.0' },
+                { id: '3b', correct: '0.90' },
+                { id: '4a', correct: 'Sí' },
+                { id: '4b', correct: '0.08' },
+                { id: '5a', correct: '0.089' },
+                { id: '5b', correct: '0.911' },
+                { id: '6a', correct: '15' },
+                { id: '6b', correct: '15' },
+                { id: '7a', correct: '0.68' },
+                { id: '7b', correct: '39.7' },
+                { id: '8a', correct: '12.5' },
+                { id: '8b', correct: '98.6' },
+                { id: '9a', correct: '12.1' },
+                { id: '9b', correct: '12.1' },
+                { id: '10a', correct: '0.00186' },
+                { id: '10b', correct: 'Sí' }
+            ];
+            
+            answers.forEach(answer => {
+                const userAnswer = document.getElementById(`answer${answer.id}`).value.trim().toLowerCase();
+                const correctAnswer = answer.correct.toLowerCase();
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente trabajo! Dominas los cálculos de concentración.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los conceptos teóricos.';
+            } else {
+                message = 'Revisa los conceptos fundamentales y practica más.';
+            }
+            
+            alert(`Resultados:\n${score}/${totalQuestions} respuestas correctas (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#34495e';
+                    const feedback = document.getElementById(`feedback${this.id.replace('answer', '')}`);
+                    feedback.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

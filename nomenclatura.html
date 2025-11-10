@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomenclatura Química - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --thermo-color: #e74c3c;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .question-block {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .theory-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .theory-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .theory-content {
+            line-height: 1.8;
+        }
+
+        .theory-point {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .theory-point h4 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--secondary-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-flask"></i> Nomenclatura Química</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">IUPAC</span> <span class="info-badge">Compuestos Inorgánicos</span> <span class="info-badge">Nomenclatura Sistemática</span></p>
+        </header>
+
+        <!-- Sección de Estudio Teórico -->
+        <section class="theory-section">
+            <h2 class="theory-title"><i class="fas fa-book"></i> Estudio Teórico - Reglas IUPAC</h2>
+            <div class="theory-content">
+                <div class="theory-point">
+                    <h4><i class="fas fa-1"></i> Óxidos Metálicos</h4>
+                    <p>Se nombran con la palabra "óxido" seguida del nombre del metal con prefijos que indican la cantidad de átomos de oxígeno.</p>
+                    <div class="example-box">
+                        Fe₂O₃ → Trióxido de dihierro<br>
+                        CuO → Monóxido de cobre
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-2"></i> Sales Binarias</h4>
+                    <p>Se nombran con el nombre del no metal terminado en "-uro" seguido del nombre del metal.</p>
+                    <div class="example-box">
+                        NaCl → Cloruro de sodio<br>
+                        CaF₂ → Fluoruro de calcio
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-3"></i> Hidróxidos</h4>
+                    <p>Se nombran con la palabra "hidróxido" seguida del nombre del metal.</p>
+                    <div class="example-box">
+                        NaOH → Hidróxido de sodio<br>
+                        Al(OH)₃ → Hidróxido de aluminio
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-4"></i> Ácidos Oxácidos</h4>
+                    <p>Se nombran con la palabra "ácido" seguida del nombre del no metal con sufijos que indican el estado de oxidación.</p>
+                    <div class="example-box">
+                        H₂SO₄ → Ácido sulfúrico<br>
+                        H₂SO₃ → Ácido sulfuroso
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-5"></i> Sales Ternarias</h4>
+                    <p>Se nombran con el nombre del anión seguido del nombre del metal.</p>
+                    <div class="example-box">
+                        Na₂CO₃ → Carbonato de sodio<br>
+                        Ca₃(PO₄)₂ → Fosfato de calcio
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Nomenclatura</h2>
+            <p>Practica tus conocimientos con estos ejercicios interactivos</p>
+        </section>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">1</span> Óxidos Metálicos</h2>
+            <div class="exercise-content">
+                <p>Nombra los siguientes óxidos metálicos según las reglas IUPAC:</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Fe₂O₃</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1a" class="answer-input" placeholder="Ej: Trióxido de dihierro">
+                    <button class="btn-check" onclick="checkAnswer('1a', 'Trióxido de dihierro')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) CuO</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1b" class="answer-input" placeholder="Ej: Monóxido de cobre">
+                    <button class="btn-check" onclick="checkAnswer('1b', 'Monóxido de cobre')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Al₂O₃</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1c" class="answer-input" placeholder="">
+                    <button class="btn-check" onclick="checkAnswer('1c', 'Trióxido de dialuminio')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">2</span> Sales Binarias</h2>
+            <div class="exercise-content">
+                <p>Escribe las fórmulas de las siguientes sales binarias:</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Cloruro de sodio</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2a" class="answer-input" placeholder="Ej: NaCl">
+                    <button class="btn-check" onclick="checkAnswer('2a', 'NaCl')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Sulfuro de hierro(III)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2b" class="answer-input" placeholder="Ej: Fe2S3">
+                    <button class="btn-check" onclick="checkAnswer('2b', 'Fe2S3')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Fluoruro de calcio</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2c" class="answer-input" placeholder="">
+                    <button class="btn-check" onclick="checkAnswer('2c', 'CaF2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">3</span> Hidróxidos</h2>
+            <div class="exercise-content">
+                <p>Completa la nomenclatura de los siguientes hidróxidos:</p>
+                
+                <div class="question-block">
+                    <p><strong>a) NaOH → ________________</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3a" class="answer-input" placeholder="Ej: Hidróxido de sodio">
+                    <button class="btn-check" onclick="checkAnswer('3a', 'Hidróxido de sodio')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) ________________ → Hidróxido de aluminio</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3b" class="answer-input" placeholder="Ej: Al(OH)3">
+                    <button class="btn-check" onclick="checkAnswer('3b', 'Al(OH)3')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Ca(OH)₂ → ________________</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3c" class="answer-input" placeholder="">
+                    <button class="btn-check" onclick="checkAnswer('3c', 'Hidróxido de calcio')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">4</span> Ácidos Oxácidos</h2>
+            <div class="exercise-content">
+                <p>Relaciona los ácidos oxácidos con su nomenclatura correcta:</p>
+                
+                <div class="question-block">
+                    <p><strong>a) H₂SO₄</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4a" class="answer-input" placeholder="Ej: Ácido sulfúrico">
+                    <button class="btn-check" onclick="checkAnswer('4a', 'Ácido sulfúrico')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) HNO₃</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4b" class="answer-input" placeholder="Ej: Ácido nítrico">
+                    <button class="btn-check" onclick="checkAnswer('4b', 'Ácido nítrico')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) H₃PO₄</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4c" class="answer-input" placeholder="">
+                    <button class="btn-check" onclick="checkAnswer('4c', 'Ácido fosfórico')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">5</span> Sales Ternarias</h2>
+            <div class="exercise-content">
+                <p>Completa las siguientes sales ternarias:</p>
+                
+                <div class="question-block">
+                    <p><strong>a) Na₂CO₃ → ________________</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5a" class="answer-input" placeholder="Ej: Carbonato de sodio">
+                    <button class="btn-check" onclick="checkAnswer('5a', 'Carbonato de sodio')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) ________________ → Sulfato de cobre(II)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5b" class="answer-input" placeholder="Ej: CuSO4">
+                    <button class="btn-check" onclick="checkAnswer('5b', 'CuSO4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) K₃PO₄ → ________________</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5c" class="answer-input" placeholder="">
+                    <button class="btn-check" onclick="checkAnswer('5c', 'Fosfato de potasio')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Nomenclatura Química | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const userAnswer = document.getElementById(`answer${questionId}`).value.trim();
+            const feedback = document.getElementById(`feedback${questionId}`);
+            
+            feedback.style.display = 'block';
+            
+            const normalizedUserAnswer = userAnswer.toLowerCase().replace(/\s+/g, ' ');
+            const normalizedCorrectAnswer = correctAnswer.toLowerCase().replace(/\s+/g, ' ');
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! Respuesta exacta.';
+                document.getElementById(`answer${questionId}`).style.borderColor = '#27ae60';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                document.getElementById(`answer${questionId}`).style.borderColor = '#e74c3c';
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const totalQuestions = 15;
+            
+            // Verificar todas las respuestas
+            const answers = [
+                { id: '1a', correct: 'Trióxido de dihierro' },
+                { id: '1b', correct: 'Monóxido de cobre' },
+                { id: '1c', correct: 'Trióxido de dialuminio' },
+                { id: '2a', correct: 'NaCl' },
+                { id: '2b', correct: 'Fe2S3' },
+                { id: '2c', correct: 'CaF2' },
+                { id: '3a', correct: 'Hidróxido de sodio' },
+                { id: '3b', correct: 'Al(OH)3' },
+                { id: '3c', correct: 'Hidróxido de calcio' },
+                { id: '4a', correct: 'Ácido sulfúrico' },
+                { id: '4b', correct: 'Ácido nítrico' },
+                { id: '4c', correct: 'Ácido fosfórico' },
+                { id: '5a', correct: 'Carbonato de sodio' },
+                { id: '5b', correct: 'CuSO4' },
+                { id: '5c', correct: 'Fosfato de potasio' }
+            ];
+            
+            answers.forEach(answer => {
+                const userAnswer = document.getElementById(`answer${answer.id}`).value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const correctAnswer = answer.correct.toLowerCase().replace(/\s+/g, ' ');
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente trabajo! Dominas la nomenclatura química.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los conceptos teóricos.';
+            } else {
+                message = 'Revisa la sección de estudio teórico y practica más.';
+            }
+            
+            alert(`Resultados:\n${score}/${totalQuestions} respuestas correctas (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = var('--border-color');
+                    const feedback = document.getElementById(`feedback${this.id.replace('answer', '')}`);
+                    feedback.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

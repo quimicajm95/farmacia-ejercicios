@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinética Química - FarmaciaQuímica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --kinetic-color: #9b59b6;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #ecf0f1;
+            --border-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--kinetic-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin: 50px 0 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--kinetic-color), var(--warning-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--warning-color);
+        }
+
+        .exercise-content {
+            line-height: 1.8;
+            color: #ecf0f1;
+        }
+
+        .question-block {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--warning-color);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, var(--warning-color), var(--success-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-check:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .theory-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .theory-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--kinetic-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--kinetic-color);
+        }
+
+        .theory-content {
+            line-height: 1.8;
+        }
+
+        .theory-point {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(155, 89, 182, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--kinetic-color);
+        }
+
+        .theory-point h4 {
+            color: var(--kinetic-color);
+            margin-bottom: 10px;
+        }
+
+        .example-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .exercise-number {
+            display: inline-block;
+            background: var(--warning-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, var(--kinetic-color), var(--warning-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            color: #95a5a6;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: rgba(155, 89, 182, 0.2);
+            color: var(--kinetic-color);
+            font-weight: bold;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .formula-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            text-align: center;
+            font-size: 1.2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .math-expression {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <h1><i class="fas fa-tachometer-alt"></i> Cinética Química</h1>
+            <p>Facultad de Farmacia - Universidad</p>
+            <p><span class="info-badge">Velocidad de Reacción</span> <span class="info-badge">Orden de Reacción</span> <span class="info-badge">Constante de Velocidad</span> <span class="info-badge">Energía de Activación</span></p>
+        </header>
+
+        <!-- Sección de Estudio Teórico -->
+        <section class="theory-section">
+            <h2 class="theory-title"><i class="fas fa-book"></i> Conceptos Fundamentales de Cinética Química</h2>
+            <div class="theory-content">
+                <div class="theory-point">
+                    <h4><i class="fas fa-1"></i> Velocidad de Reacción</h4>
+                    <p>Es la rapidez con que se consume un reactivo o se forma un producto en una reacción química. Se expresa como el cambio de concentración por unidad de tiempo.</p>
+                    <div class="example-box">
+                        v = - (1/a) · d[A]/dt = (1/b) · d[B]/dt
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-2"></i> Ley de Velocidad</h4>
+                    <p>Expresa la relación entre la velocidad de reacción y las concentraciones de los reactivos. Para una reacción aA + bB → productos:</p>
+                    <div class="example-box">
+                        v = k · [A]<sup>m</sup> · [B]<sup>n</sup>
+                    </div>
+                    <p>Donde k es la constante de velocidad, y m y n son los órdenes de reacción respecto a A y B.</p>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-3"></i> Orden de Reacción</h4>
+                    <p>Es la suma de los exponentes en la ley de velocidad. Determina cómo afectan las concentraciones a la velocidad de reacción.</p>
+                    <div class="example-box">
+                        Orden total = m + n
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-4"></i> Energía de Activación</h4>
+                    <p>Es la energía mínima que deben tener las moléculas para que choquen eficazmente y den lugar a productos. Se relaciona con la constante de velocidad mediante la ecuación de Arrhenius:</p>
+                    <div class="example-box">
+                        k = A · e<sup>-Ea/RT</sup>
+                    </div>
+                </div>
+
+                <div class="theory-point">
+                    <h4><i class="fas fa-5"></i> Método de Velocidades Iniciales</h4>
+                    <p>Permite determinar el orden de reacción midiendo la velocidad inicial a diferentes concentraciones de reactivos, manteniendo constantes las demás condiciones.</p>
+                    <div class="example-box">
+                        v<sub>0</sub> = k · [A]<sub>0</sub><sup>m</sup> · [B]<sub>0</sub><sup>n</sup>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Ejercicios -->
+        <section class="section-header">
+            <h2><i class="fas fa-pencil-alt"></i> Ejercicios de Cinética Química</h2>
+            <p>Practica tus conocimientos con estos ejercicios interactivos</p>
+        </section>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">1</span> Descomposición del Pentóxido de Dinitrógeno</h2>
+            <div class="exercise-content">
+                <p>Se estudia la descomposición del pentóxido de dinitrógeno:</p>
+                <div class="formula-box">
+                    N<sub>2</sub>O<sub>5</sub>(g) = 2 NO<sub>2</sub>(g) + ½ O<sub>2</sub>(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos de la dependencia de la constante de velocidad con la temperatura:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>T / K</th>
+                            <th>k / s<sup>-1</sup></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>338</td>
+                            <td>4,87 × 10<sup>-3</sup></td>
+                        </tr>
+                        <tr>
+                            <td>328</td>
+                            <td>1,50 × 10<sup>-3</sup></td>
+                        </tr>
+                        <tr>
+                            <td>318</td>
+                            <td>4,98 × 10<sup>-4</sup></td>
+                        </tr>
+                        <tr>
+                            <td>308</td>
+                            <td>1,35 × 10<sup>-4</sup></td>
+                        </tr>
+                        <tr>
+                            <td>298</td>
+                            <td>3,46 × 10<sup>-5</sup></td>
+                        </tr>
+                        <tr>
+                            <td>273</td>
+                            <td>7,87 × 10<sup>-7</sup></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Explique por qué aumenta la constante de velocidad con la temperatura.</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1a" class="answer-input" placeholder="Explique brevemente">
+                    <button class="btn-check" onclick="checkAnswer('1a', 'Aumenta la energía cinética de las moléculas y la frecuencia de colisiones efectivas')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la energía de activación de la reacción (en kJ/mol)</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer1b" class="answer-input" placeholder="Respuesta en kJ/mol">
+                    <button class="btn-check" onclick="checkAnswer('1b', '102.5')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback1b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">2</span> Descomposición del Acetaldehído</h2>
+            <div class="exercise-content">
+                <p>Se estudia la descomposición del acetaldehído a 800 K:</p>
+                <div class="formula-box">
+                    CH<sub>3</sub>CHO(g) = CH<sub>4</sub>(g) + CO(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos de velocidad inicial:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>-dc(CH<sub>3</sub>CHO)×10<sup>6</sup>/dt (mol/L·s)</th>
+                            <th>c<sub>0</sub>(CH<sub>3</sub>CHO) (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>I</td>
+                            <td>0,9</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>II</td>
+                            <td>3,6</td>
+                            <td>0,20</td>
+                        </tr>
+                        <tr>
+                            <td>III</td>
+                            <td>8,1</td>
+                            <td>0,30</td>
+                        </tr>
+                        <tr>
+                            <td>IV</td>
+                            <td>14,4</td>
+                            <td>0,40</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine el orden de reacción respecto al acetaldehído</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2a" class="answer-input" placeholder="Orden de reacción">
+                    <button class="btn-check" onclick="checkAnswer('2a', '2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 800 K</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2b" class="answer-input" placeholder="Respuesta en L/mol·s">
+                    <button class="btn-check" onclick="checkAnswer('2b', '9.0×10^-5')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule la velocidad cuando [CH<sub>3</sub>CHO] = 0,25 mol/L</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer2c" class="answer-input" placeholder="Respuesta en mol/L·s">
+                    <button class="btn-check" onclick="checkAnswer('2c', '5.625×10^-6')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback2c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">3</span> Reacción entre Flúor y Dióxido de Cloro</h2>
+            <div class="exercise-content">
+                <p>Se estudia la reacción a 250 K:</p>
+                <div class="formula-box">
+                    F<sub>2</sub>(g) + 2 ClO<sub>2</sub>(g) = 2 ClO<sub>2</sub>F(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos de velocidad inicial:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>-dc(F<sub>2</sub>)×10<sup>3</sup>/dt (mol/L·s)</th>
+                            <th>c<sub>0</sub>(F<sub>2</sub>) (mol/L)</th>
+                            <th>c<sub>0</sub>(ClO<sub>2</sub>) (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1,2</td>
+                            <td>0,10</td>
+                            <td>0,010</td>
+                        </tr>
+                        <tr>
+                            <td>4,8</td>
+                            <td>0,10</td>
+                            <td>0,040</td>
+                        </tr>
+                        <tr>
+                            <td>2,4</td>
+                            <td>0,20</td>
+                            <td>0,010</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine la ley de velocidad de la reacción</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3a" class="answer-input" placeholder="Ej: v = k [A]^m [B]^n">
+                    <button class="btn-check" onclick="checkAnswer('3a', 'v = k [F2] [ClO2]^2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 250 K</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3b" class="answer-input" placeholder="Respuesta en L²/mol²·s">
+                    <button class="btn-check" onclick="checkAnswer('3b', '1200')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3b" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>c) Calcule la velocidad de formación de ClO<sub>2</sub>F cuando [F<sub>2</sub>] = 0,10 M y [ClO<sub>2</sub>] = 0,020 M</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer3c" class="answer-input" placeholder="Respuesta en mol/L·s">
+                    <button class="btn-check" onclick="checkAnswer('3c', '9.6×10^-4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback3c" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">4</span> Reacción entre Óxido Nítrico e Hidrógeno</h2>
+            <div class="exercise-content">
+                <p>Se estudia la reacción:</p>
+                <div class="formula-box">
+                    2 NO(g) + 2 H<sub>2</sub>(g) = N<sub>2</sub>(g) + 2 H<sub>2</sub>O(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos de velocidad inicial a 800 K:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[NO]<sub>0</sub> (mol/L)</th>
+                            <th>[H<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1,25 × 10<sup>-3</sup></td>
+                            <td>0,10</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>5,00 × 10<sup>-3</sup></td>
+                            <td>0,20</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>2,50 × 10<sup>-3</sup></td>
+                            <td>0,10</td>
+                            <td>0,20</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine la ley de velocidad de la reacción</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4a" class="answer-input" placeholder="Ej: v = k [A]^m [B]^n">
+                    <button class="btn-check" onclick="checkAnswer('4a', 'v = k [NO]^2 [H2]')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 800 K</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer4b" class="answer-input" placeholder="Respuesta en L²/mol²·s">
+                    <button class="btn-check" onclick="checkAnswer('4b', '1.25')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback4b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">5</span> Descomposición del Peróxido de Hidrógeno</h2>
+            <div class="exercise-content">
+                <p>Se estudia la descomposición del peróxido de hidrógeno:</p>
+                <div class="formula-box">
+                    2 H<sub>2</sub>O<sub>2</sub>(ac) = 2 H<sub>2</sub>O(l) + O<sub>2</sub>(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos a 25°C:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[H<sub>2</sub>O<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1,93 × 10<sup>-4</sup></td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>3,86 × 10<sup>-4</sup></td>
+                            <td>0,20</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>5,79 × 10<sup>-4</sup></td>
+                            <td>0,30</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine el orden de reacción respecto al H<sub>2</sub>O<sub>2</sub></strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5a" class="answer-input" placeholder="Orden de reacción">
+                    <button class="btn-check" onclick="checkAnswer('5a', '1')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 25°C</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer5b" class="answer-input" placeholder="Respuesta en s⁻¹">
+                    <button class="btn-check" onclick="checkAnswer('5b', '1.93×10^-3')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback5b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">6</span> Reacción entre Bromo y Ácido Fórmico</h2>
+            <div class="exercise-content">
+                <p>Se estudia la reacción:</p>
+                <div class="formula-box">
+                    Br<sub>2</sub>(ac) + HCOOH(ac) = 2 Br⁻(ac) + 2 H⁺(ac) + CO<sub>2</sub>(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos a 25°C:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[Br<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                            <th>[HCOOH]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>4,80 × 10<sup>-6</sup></td>
+                            <td>0,010</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>9,60 × 10<sup>-6</sup></td>
+                            <td>0,020</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>4,80 × 10<sup>-6</sup></td>
+                            <td>0,010</td>
+                            <td>0,20</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine la ley de velocidad de la reacción</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6a" class="answer-input" placeholder="Ej: v = k [A]^m [B]^n">
+                    <button class="btn-check" onclick="checkAnswer('6a', 'v = k [Br2]')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 25°C</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer6b" class="answer-input" placeholder="Respuesta en s⁻¹">
+                    <button class="btn-check" onclick="checkAnswer('6b', '4.8×10^-4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback6b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">7</span> Reacción entre Óxido Nítrico y Bromo</h2>
+            <div class="exercise-content">
+                <p>Se estudia la reacción:</p>
+                <div class="formula-box">
+                    2 NO(g) + Br<sub>2</sub>(g) = 2 NOBr(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos a 273 K:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[NO]<sub>0</sub> (mol/L)</th>
+                            <th>[Br<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2,42 × 10<sup>-2</sup></td>
+                            <td>0,10</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>9,68 × 10<sup>-2</sup></td>
+                            <td>0,20</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>4,84 × 10<sup>-2</sup></td>
+                            <td>0,10</td>
+                            <td>0,20</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine la ley de velocidad de la reacción</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7a" class="answer-input" placeholder="Ej: v = k [A]^m [B]^n">
+                    <button class="btn-check" onclick="checkAnswer('7a', 'v = k [NO]^2 [Br2]')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 273 K</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer7b" class="answer-input" placeholder="Respuesta en L²/mol²·s">
+                    <button class="btn-check" onclick="checkAnswer('7b', '24.2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback7b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 8 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">8</span> Descomposición del Óxido Nitroso</h2>
+            <div class="exercise-content">
+                <p>Se estudia la descomposición del óxido nitroso:</p>
+                <div class="formula-box">
+                    2 N<sub>2</sub>O(g) = 2 N<sub>2</sub>(g) + O<sub>2</sub>(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos a 1000 K:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[N<sub>2</sub>O]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1,04 × 10<sup>-3</sup></td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>4,16 × 10<sup>-3</sup></td>
+                            <td>0,20</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>9,36 × 10<sup>-3</sup></td>
+                            <td>0,30</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine el orden de reacción respecto al N<sub>2</sub>O</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8a" class="answer-input" placeholder="Orden de reacción">
+                    <button class="btn-check" onclick="checkAnswer('8a', '2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 1000 K</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer8b" class="answer-input" placeholder="Respuesta en L/mol·s">
+                    <button class="btn-check" onclick="checkAnswer('8b', '0.104')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback8b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 9 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">9</span> Reacción entre Yodo e Hidrógeno</h2>
+            <div class="exercise-content">
+                <p>Se estudia la reacción:</p>
+                <div class="formula-box">
+                    H<sub>2</sub>(g) + I<sub>2</sub>(g) = 2 HI(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos a 700 K:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[H<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                            <th>[I<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1,76 × 10<sup>-5</sup></td>
+                            <td>0,10</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>3,52 × 10<sup>-5</sup></td>
+                            <td>0,20</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>1,76 × 10<sup>-5</sup></td>
+                            <td>0,10</td>
+                            <td>0,20</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine la ley de velocidad de la reacción</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9a" class="answer-input" placeholder="Ej: v = k [A]^m [B]^n">
+                    <button class="btn-check" onclick="checkAnswer('9a', 'v = k [H2]')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 700 K</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer9b" class="answer-input" placeholder="Respuesta en s⁻¹">
+                    <button class="btn-check" onclick="checkAnswer('9b', '1.76×10^-4')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback9b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 10 -->
+        <div class="exercise-card">
+            <h2 class="exercise-title"><span class="exercise-number">10</span> Reacción entre Monóxido de Carbono y Cloro</h2>
+            <div class="exercise-content">
+                <p>Se estudia la reacción:</p>
+                <div class="formula-box">
+                    CO(g) + Cl<sub>2</sub>(g) = COCl<sub>2</sub>(g)
+                </div>
+                
+                <p>Se obtuvieron los siguientes datos a 25°C:</p>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Experimento</th>
+                            <th>v<sub>0</sub> (mol/L·s)</th>
+                            <th>[CO]<sub>0</sub> (mol/L)</th>
+                            <th>[Cl<sub>2</sub>]<sub>0</sub> (mol/L)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1,29 × 10<sup>-2</sup></td>
+                            <td>0,10</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>2,58 × 10<sup>-2</sup></td>
+                            <td>0,20</td>
+                            <td>0,10</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>5,16 × 10<sup>-2</sup></td>
+                            <td>0,10</td>
+                            <td>0,20</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="question-block">
+                    <p><strong>a) Determine la ley de velocidad de la reacción</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10a" class="answer-input" placeholder="Ej: v = k [A]^m [B]^n">
+                    <button class="btn-check" onclick="checkAnswer('10a', 'v = k [CO] [Cl2]^2')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10a" class="feedback"></div>
+                </div>
+
+                <div class="question-block">
+                    <p><strong>b) Calcule la constante de velocidad a 25°C</strong></p>
+                </div>
+                <div class="answer-section">
+                    <input type="text" id="answer10b" class="answer-input" placeholder="Respuesta en L²/mol²·s">
+                    <button class="btn-check" onclick="checkAnswer('10b', '12.9')">
+                        <i class="fas fa-check"></i> Verificar
+                    </button>
+                    <div id="feedback10b" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
+            <button class="nav-btn" onclick="showResults()">
+                <i class="fas fa-chart-bar"></i> Ver Resultados
+            </button>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-university"></i> Facultad de Farmacia - Universidad</p>
+            <p>© 2024 Cinética Química | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        function checkAnswer(questionId, correctAnswer) {
+            const userAnswer = document.getElementById(`answer${questionId}`).value.trim();
+            const feedback = document.getElementById(`feedback${questionId}`);
+            
+            feedback.style.display = 'block';
+            
+            const normalizedUserAnswer = userAnswer.toLowerCase().replace(/\s+/g, ' ');
+            const normalizedCorrectAnswer = correctAnswer.toLowerCase().replace(/\s+/g, ' ');
+            
+            if (normalizedUserAnswer === normalizedCorrectAnswer) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> ¡Correcto! Respuesta exacta.';
+                document.getElementById(`answer${questionId}`).style.borderColor = '#27ae60';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                document.getElementById(`answer${questionId}`).style.borderColor = '#e74c3c';
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            const totalQuestions = 25;
+            
+            // Verificar todas las respuestas
+            const answers = [
+                { id: '1a', correct: 'Aumenta la energía cinética de las moléculas y la frecuencia de colisiones efectivas' },
+                { id: '1b', correct: '102.5' },
+                { id: '2a', correct: '2' },
+                { id: '2b', correct: '9.0×10^-5' },
+                { id: '2c', correct: '5.625×10^-6' },
+                { id: '3a', correct: 'v = k [F2] [ClO2]^2' },
+                { id: '3b', correct: '1200' },
+                { id: '3c', correct: '9.6×10^-4' },
+                { id: '4a', correct: 'v = k [NO]^2 [H2]' },
+                { id: '4b', correct: '1.25' },
+                { id: '5a', correct: '1' },
+                { id: '5b', correct: '1.93×10^-3' },
+                { id: '6a', correct: 'v = k [Br2]' },
+                { id: '6b', correct: '4.8×10^-4' },
+                { id: '7a', correct: 'v = k [NO]^2 [Br2]' },
+                { id: '7b', correct: '24.2' },
+                { id: '8a', correct: '2' },
+                { id: '8b', correct: '0.104' },
+                { id: '9a', correct: 'v = k [H2]' },
+                { id: '9b', correct: '1.76×10^-4' },
+                { id: '10a', correct: 'v = k [CO] [Cl2]^2' },
+                { id: '10b', correct: '12.9' }
+            ];
+            
+            answers.forEach(answer => {
+                const userAnswer = document.getElementById(`answer${answer.id}`).value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const correctAnswer = answer.correct.toLowerCase().replace(/\s+/g, ' ');
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            
+            const percentage = (score / totalQuestions * 100).toFixed(1);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = '¡Excelente trabajo! Dominas la cinética química.';
+            } else if (percentage >= 70) {
+                message = 'Buen trabajo, pero puedes mejorar con más práctica.';
+            } else if (percentage >= 50) {
+                message = 'Necesitas repasar más los conceptos teóricos.';
+            } else {
+                message = 'Revisa la sección de estudio teórico y practica más.';
+            }
+            
+            alert(`Resultados:\n${score}/${totalQuestions} respuestas correctas (${percentage}%)\n\n${message}`);
+        }
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.answer-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#34495e';
+                    const feedback = document.getElementById(`feedback${this.id.replace('answer', '')}`);
+                    feedback.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
